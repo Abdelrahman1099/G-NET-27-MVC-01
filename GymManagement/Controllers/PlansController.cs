@@ -12,9 +12,9 @@ namespace GymManagement.Controllers
     {
         //private readonly GymDbContext _dbContext = new GymDbContext();
 
-        private readonly IPlanRepository _planRepositories;
+        private readonly IGenericRepository<Plan> _planRepositories;
 
-        public PlansController(IPlanRepository planRepository)
+        public PlansController(IGenericRepository<Plan> planRepository)
         {
             _planRepositories = planRepository;
         }
