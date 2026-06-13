@@ -1,4 +1,4 @@
-﻿ using GymManagement.DAL.Repositories.Interfaces;
+﻿using GymManagement.DAL.Repositories.Interfaces;
 using GymManagement.DbContexts;
 using GymManagement.Models;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +14,7 @@ namespace GymManagement.DAL.Repositories.Classes
     {
         private readonly GymDbContext _dbContext;
 
-       public PlanRepository(GymDbContext context)
+        public PlanRepository(GymDbContext context)
         {
             _dbContext = context;
         }
@@ -43,7 +43,7 @@ namespace GymManagement.DAL.Repositories.Classes
 
         public async Task<int> UpdateAsync(Plan plan, CancellationToken ct = default)
         {
-            _dbContext.Plans.Update(plan); 
+            _dbContext.Plans.Update(plan);
             return await _dbContext.SaveChangesAsync(ct);
         }
     }
