@@ -2,17 +2,20 @@ using GymManagement.BLL;
 using GymManagement.BLL.Services.Classes;
 using GymManagement.BLL.Services.Interfaces;
 using GymManagement.DAL;
+using GymManagement.DAL.DataSeeding;
 using GymManagement.DAL.Models;
 using GymManagement.DAL.Repositories.Classes;
 using GymManagement.DAL.Repositories.Interfaces;
 using GymManagement.DbContexts;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
+using System.Threading.Tasks;
 
 namespace GymManagement
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +33,18 @@ namespace GymManagement
             builder.Services.AddScoped<IMemberService, MemberService>();
             builder.Services.AddAutoMapper(M => M.AddProfile(new MappingProfile()));
             var app = builder.Build();
+
+            using var scope = app.Services.CreateScope();
+            var _context = scope.ServiceProvider.GetRequiredService<GymDbContext>();
+            var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+            var folderPath = Path.Combine(app.Environment.ContentRootPath, "wwwroot", "files");
+            var pendingMigration = await _context.Database.GetPendingMigrationsAsync();
+            if(pendingMigration.Any())
+            {
+                await _context.Database.MigrateAsync();
+            }
+            await GymDataSeeding.SeedAsync(_context, folderPath, logger);
+
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {

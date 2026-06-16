@@ -2,6 +2,7 @@
 using GymManagement.BLL.ViewModels.Sessions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Build.Tasks;
 using System.Threading.Tasks;
 
 namespace GymManagement.PL.Controllers
@@ -36,13 +37,13 @@ namespace GymManagement.PL.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _sessionService.CreateSessionAsync(model, ct);
-                if (result)
+                if (result.success)
                 {
                     TempData["SuccesMessage"] = "Session Created Succesfully";
                 }
                 else
                 {
-                    TempData["ErrorMessage"] = "Failed to Create Session";
+                    TempData["ErrorMessage"] = result.error;
                 }
 
                 return RedirectToAction("Index");
@@ -52,5 +53,79 @@ namespace GymManagement.PL.Controllers
         }
 
 
+        [HttpGet]
+        public async Task<IActionResult> Details(int id, CancellationToken ct = default)
+        {
+            var result = await _sessionService.GetSessionDetailsByIdAsync(id, ct);
+            if (result.success)
+                return View(result.Value);
+            TempData["ErrorMessage"] = result.error;
+            return RedirectToAction("Index");
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id, CancellationToken ct = default)
+        {
+            var result = await _sessionService.GetSessionToUpdateAsync(id, ct);
+            if (result.success)
+            {
+                ViewBag.traniers = new SelectList(await _sessionService.GetAllTrainersForDropDownAsync(ct), "Id", "Name");
+                return View(result);
+            }
+            TempData["errorMessage"] = result.error;
+            return RedirectToAction("Index");
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, SessionToUpdateViewModel model, CancellationToken ct = default)
+        {
+          if(!ModelState.IsValid) return View(model);
+          var result = await _sessionService.UpdateSessionAsync(id, model, ct);
+            if (result.success)
+            {
+                TempData["SuccessMessage"] = "session Updated";
+                return RedirectToAction("Index");
+            }
+            else 
+            {
+                TempData["ErrorMessage"] = result.error;
+                return View(model);
+            }
+
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id, CancellationToken ct = default) 
+        {
+            var result = await _sessionService.GetSessionDetailsByIdAsync(id,ct);
+            if (result.success)
+
+            return View(result.Value);
+            TempData["ErorrMessage"] = result.error;
+            return RedirectToAction("Index");
+            
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteConfirmed(int id, CancellationToken ct = default)
+        {
+            var result = await _sessionService.DeleteSessionAsync(id,ct);
+            if (result.success)
+            {
+                TempData["sucessMessage"] = "session deleted";
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                TempData["ErrorMessage"] = result.error;
+                return RedirectToAction("Index");
+
+            }
+
+        }
+        
     }
 };
