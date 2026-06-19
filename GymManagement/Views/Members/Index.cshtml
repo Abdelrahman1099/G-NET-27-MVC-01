@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<MemberViewModel>
 
-@ViewData["Title"] = "Members";
+@{ViewData["Title"] = "Members";}
 
 
 <div class="container">
@@ -124,8 +124,16 @@
                                 <tr>
                                     <td>
                                         <span class="avatar">
-                                            <img src="~/images/User.jpg" alt="Default Avatar" class="rounded-circle"
+                                            @if(member.Photo is null)
+                                            {
+                                                <img src="~/images/User.jpg" alt="Default Avatar" class="rounded-circle"
+                                                     style="width: 40px; height: 40px;" /> 
+                                            }
+                                            else
+                                            {
+                                                <img src=@(Url.Action("Picture", "Members", new {id = member.Id} )) alt="Default Avatar" class="rounded-circle"
                                                  style="width: 40px; height: 40px;" />
+                                            }
                                         </span>
                                     </td>
                                     <td><span>Salma</span></td>

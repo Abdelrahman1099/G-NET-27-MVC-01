@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using GymManagement.BLL.Services.Attachment;
 using GymManagement.BLL.Services.Interfaces;
 using GymManagement.BLL.ViewModels.Members;
 using GymManagement.DAL;
@@ -9,7 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using System.Text;
+using System.Text; 
 using System.Threading.Tasks;
 
 namespace GymManagement.BLL.Services.Classes
@@ -18,14 +19,17 @@ namespace GymManagement.BLL.Services.Classes
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IAttachmentService _attachmentService;
 
         public MemberService(
             IUnitOfWork unitOfWork,
-            IMapper mapper
+            IMapper mapper,
+            IAttachmentService attachmentService
             ) 
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _attachmentService = attachmentService;
         }
 
         public async Task<bool> CreateMemberAsync(CreateMemberViewModel model, CancellationToken ct)
@@ -36,6 +40,9 @@ namespace GymManagement.BLL.Services.Classes
 
             if(emailExsist || PhoneExsist) { return false; }
 
+           var fileName =  await _attachmentService.UploadAsync(model.PhotoFile.OpenReadStream(),"MembersPicture", model.PhotoFile.FileName, ct);
+           if(string.IsNullOrWhiteSpace(fileName)) return false;    
+ 
             //var member = new Member()
             //{
             //    Name = model.Name,
@@ -58,11 +65,17 @@ namespace GymManagement.BLL.Services.Classes
             //};
 
             var member =  _mapper.Map<Member>(model);
-
+            member.Photo = fileName;
             _unitOfWork.GetRepository<Member>().Add(member);
             var count = await _unitOfWork.SaveChangesAsync(ct);
 
-            return count > 0;
+            if(count > 0) return true;
+            else
+            {
+                _attachmentService.Delete("MembersPicture", fileName);
+                return false;
+            }
+            
         }
 
         public Task<bool> CreateMemberViewModel(CreateMemberViewModel model, CancellationToken ct)

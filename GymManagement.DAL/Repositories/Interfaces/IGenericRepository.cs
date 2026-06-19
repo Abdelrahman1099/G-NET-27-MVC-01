@@ -19,5 +19,7 @@ namespace GymManagement.DAL.Repositories.Interfaces
 
         Task<bool> AnyAsyc(Expression<Func<TEntity, bool>> predicate, CancellationToken ct = default);
         Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken ct = default);
+        Task<int> CountAsyc(Expression<Func<TEntity, bool>> predicate = default, CancellationToken ct = default);
+
     }
 }
