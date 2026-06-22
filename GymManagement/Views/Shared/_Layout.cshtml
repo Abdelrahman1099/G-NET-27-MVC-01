@@ -47,14 +47,14 @@
                             <a class="nav-link px-3 py-2 mx-2 fw-bolder fs-5" asp-controller="Memberships" asp-action="Index">Memberships</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-3 py-2 mx-2 fw-bolder fs-5" href="#">Sessions Schedule</a>
+                            <a class="nav-link px-3 py-2 mx-2 fw-bolder fs-5" asp-action="Index" asp-controller="Bookings">Sessions Schedule</a>
                         </li>
                         <li class="nav-item">
-                            <form action="/Account/Logout" method="post" class="d-inline">
+                            <form asp-action="Logout" asp-controller="Account" method="post" class="d-inline">
                                 <button type="submit" class="btn btn-link nav-link px-3 py-2 mx-2 fw-bolder fs-5 text-black-alternative">
                                     Logout
                                 </button>
-                            </form>
+                            </form> 
                         </li>
                     </ul>
                 </div>

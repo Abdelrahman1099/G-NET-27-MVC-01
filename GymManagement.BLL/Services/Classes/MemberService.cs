@@ -38,7 +38,7 @@ namespace GymManagement.BLL.Services.Classes
             var emailExsist = await _unitOfWork.GetRepository<Member>().AnyAsyc(M => M.Email == model.Email, ct);
             var PhoneExsist = await _unitOfWork.GetRepository<Member>().AnyAsyc(M => M.Phone == model.Phone, ct);
 
-            if(emailExsist || PhoneExsist) { return false; }
+            if(emailExsist || PhoneExsist)  return false; 
 
            var fileName =  await _attachmentService.UploadAsync(model.PhotoFile.OpenReadStream(),"MembersPicture", model.PhotoFile.FileName, ct);
            if(string.IsNullOrWhiteSpace(fileName)) return false;    
@@ -83,16 +83,22 @@ namespace GymManagement.BLL.Services.Classes
             throw new NotImplementedException();
         }
 
+
         public async Task<bool> DeleteMemberViewModel(int memberId, CancellationToken ct)
         {
             var member = await _unitOfWork.GetRepository<Member>().GetById(memberId, ct);
             if (member is null) return false;
-            var hasFutureSessions = await _unitOfWork.GetRepository<Booking>().AnyAsyc(B => B.Id == B.MemberId && B.Session.StartDate > DateTime.Now, ct);
-            if (!hasFutureSessions) return false;
+
+            var hasFutureSessions = await _unitOfWork.GetRepository<Booking>()
+                .AnyAsyc(B => B.MemberId == memberId && B.Session.StartDate > DateTime.Now, ct);
+
+            if (hasFutureSessions) return false;
+
             _unitOfWork.GetRepository<Member>().Delete(member);
             var count = await _unitOfWork.SaveChangesAsync(ct);
             return count > 0;
         }
+
 
         public async Task<MemberViewModel?> GetAllMembeDetailsAsync(int memberId, CancellationToken ct)
         {

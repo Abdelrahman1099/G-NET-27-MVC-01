@@ -59,8 +59,16 @@
                                 <tr>
                                     <td>
                                         <span class="avatar">
-                                            <img src="~/images/@member.Photo" alt="Default Avatar" class="rounded-circle"
-                                                 style="width: 40px; height: 40px;" />
+                                            @if (member.Photo is null)
+                                            {
+                                                <img src="~/images/User.jpg" alt="Default Avatar" class="rounded-circle"
+                                                     style="width: 40px; height: 40px;" />
+                                            }
+                                            else
+                                            {
+                                                <img src="@Url.Action("Picture", "Members", new { id = member.Id })" alt="Member Photo" class="rounded-circle"
+                                                     style="width: 40px; height: 40px;" />
+                                            }
                                         </span>
                                     </td>
                                     <td><span>@member.Name</span></td>
@@ -70,13 +78,13 @@
                                     <td class="action position-relative">
                                         <div class="dropdown">
                                             <button class="btn btn-link p-0 border-0" type="button"
-                                                    id="dropdownMenuButton-member.Id" data-bs-toggle="dropdown"
+                                                    id="dropdownMenuButton-@member.Id" data-bs-toggle="dropdown"
                                                     aria-expanded="false">
                                                 <img src="~/images/action dots.jpg" alt="action icon" />
                                             </button>
 
                                             <ul class="dropdown-menu dropdown-menu-start"
-                                                aria-labelledby="dropdownMenuButton-member.Id">
+                                                aria-labelledby="dropdownMenuButton-@member.Id">
                                                 <li>
                                                     <a asp-controller="Members" asp-action="MemberDetails" asp-route-id="@member.Id"
                                                        class="dropdown-item d-flex align-items-center gap-3">
@@ -116,79 +124,6 @@
                                                     </a>
                                                 </li>
                                             </ul>
-
-
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span class="avatar">
-                                            @if(member.Photo is null)
-                                            {
-                                                <img src="~/images/User.jpg" alt="Default Avatar" class="rounded-circle"
-                                                     style="width: 40px; height: 40px;" /> 
-                                            }
-                                            else
-                                            {
-                                                <img src=@(Url.Action("Picture", "Members", new {id = member.Id} )) alt="Default Avatar" class="rounded-circle"
-                                                 style="width: 40px; height: 40px;" />
-                                            }
-                                        </span>
-                                    </td>
-                                    <td><span>Salma</span></td>
-                                    <td><span>Salma@gmail.com</span></td>
-                                    <td><span>Femal</span></td>
-                                    <td><span>01122145562</span></td>
-                                    <td class="action position-relative">
-                                        <div class="dropdown">
-                                            <button class="btn btn-link p-0 border-0" type="button"
-                                                    id="dropdownMenuButton-member.Id" data-bs-toggle="dropdown"
-                                                    aria-expanded="false">
-                                                <img src="~/images/action dots.jpg" alt="action icon" />
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-start"
-                                                aria-labelledby="dropdownMenuButton-member.Id">
-                                                <li>
-                                                    <a asp-controller="Members" asp-action="MemberDetails" asp-route-id="member.Id"
-                                                       class="dropdown-item d-flex align-items-center gap-3">
-                                                        <img src="~/images/info 1.jpg" alt="info icon"
-                                                             style="width: 20px; height: 20px;" />
-                                                        <span>View Member Data</span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a asp-controller="Members" asp-action="HealthRecordDetails" asp-route-id="member.Id"
-                                                       class="dropdown-item d-flex align-items-center gap-3">
-                                                        <img src="~/images/info 1.jpg" alt="info icon"
-                                                             style="width: 20px; height: 20px;" />
-                                                        <span>View Health Record Data</span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <hr class="dropdown-divider">
-                                                </li>
-                                                <li>
-                                                    <a asp-controller="Members" asp-action="EditMember" asp-route-id="member.Id"
-                                                       class="dropdown-item d-flex align-items-center gap-3">
-                                                        <img src="~/images/edit.jpg" alt="edit icon"
-                                                             style="width: 20px; height: 20px;" />
-                                                        <span>Edit Member Data</span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <hr class="dropdown-divider">
-                                                </li>
-                                                <li>
-                                                    <a asp-controller="Members" asp-action="Delete" asp-route-id="member.Id"
-                                                       class="dropdown-item d-flex align-items-center gap-3 text-danger">
-                                                        <img src="~/images/x-circle 1.jpg" alt="delete icon"
-                                                             style="width: 20px; height: 20px;" />
-                                                        <span>Delete</span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-
                                         </div>
                                     </td>
                                 </tr>

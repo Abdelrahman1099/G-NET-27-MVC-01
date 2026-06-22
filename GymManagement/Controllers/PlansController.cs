@@ -2,12 +2,14 @@
 using GymManagement.DAL.Repositories.Interfaces;
 using GymManagement.DbContexts;
 using GymManagement.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 
 namespace GymManagement.Controllers
 {
+    [Authorize(Roles = "SuperAdmin")]
     public class PlansController : Controller
     {
         //private readonly GymDbContext _dbContext = new GymDbContext();

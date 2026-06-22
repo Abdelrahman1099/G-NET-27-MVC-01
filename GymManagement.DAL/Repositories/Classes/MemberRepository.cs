@@ -23,7 +23,7 @@ namespace GymManagement.DAL.Repositories.Classes
         public async Task<int> AddAsync(Member member, CancellationToken ct = default)
         {
             await _dbContext.Members.AddAsync(member, ct);
-            return await _dbContext.SaveChangesAsync();
+            return await _dbContext.SaveChangesAsync(ct);
         }
 
         public async Task<int> DeleteAsync(Member member, CancellationToken ct = default)

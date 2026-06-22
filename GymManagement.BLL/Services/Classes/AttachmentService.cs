@@ -26,8 +26,9 @@ namespace GymManagement.BLL.Services.Classes
             if (fileStream.Length == 0) return null;
             if (fileStream.Length > _maxFileSize) return null;
 
-            var extension = Path.GetExtension(folderName);
-            if (string.IsNullOrWhiteSpace(extension) || _allowedExtension.Contains(extension)) return null;
+            var extension = Path.GetExtension(fileName);
+            if (string.IsNullOrWhiteSpace(extension) || !_allowedExtension.Contains(extension.ToLower()))
+                return null;
 
             var uploadsFolder = Path.Combine(_env.ContentRootPath, folderName);
             Directory.CreateDirectory(uploadsFolder);
